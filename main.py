@@ -8,22 +8,81 @@ import datetime
 MARKET = datetime.time(9, 15)
 MARKET_CLOSE = datetime.time(15, 35)
 
+first_run = True
+loading_page = 60 # Time to allow page to load, This is a requirement
+time_before_refresh = 300  # How often you want the scraper to run
+
+# while True:
+#
+#     if first_run:
+#         print('Initializing...')
+#         calls = moneycontrol.ActiveCalls()
+#         puts = moneycontrol.ActivePuts()
+#         gainers = moneycontrol.Gainers()
+#         losers = moneycontrol.Losers()
+#         indices = moneycontrol.Indices()
+#         news = moneycontrol.News()
+#         first_run = False
+#
+#     else:
+#         print(f'Starting Scraping, page loading - {loading_page}Seconds ')
+#         sleep(loading_page) # load time for website
+#
+#         googledoc.write_to_file_calls(calls.moneycontrol_active_calls())
+#         googledoc.write_to_file_puts(puts.moneycontrol_active_puts())
+#         googledoc.write_to_file_gainers(gainers.moneycontrol_gainers())
+#         googledoc.write_to_file_losers(losers.moneycontrol_losers())
+#         googledoc.write_to_file_indices(indices.moneycontrol_indices())
+#         googledoc.write_to_file_news(news.moneycontrol_news())
+#
+#         sleep(time_before_refresh)
+#
+#         news.refresh()
+
+
 while 1:
 
     WEEKDAY = datetime.datetime.weekday(datetime.datetime.utcnow() + datetime.timedelta(hours=5,minutes=30))
+    sleep(10)
     if WEEKDAY in (1, 2, 3, 4, 5):
         UTC_TO_IST = datetime.datetime.utcnow() + \
-                     datetime.timedelta(hours=5, minutes=30)
+                      datetime.timedelta(hours=5, minutes=30)
 
         if MARKET <= UTC_TO_IST.time() < MARKET_CLOSE:
-            googledoc.write_to_file_calls(moneycontrol.moneycontrol_active_calls())
-            googledoc.write_to_file_puts(moneycontrol.moneycontrol_active_puts())
-            googledoc.write_to_file_gainers(moneycontrol.moneycontrol_gainers())
-            googledoc.write_to_file_losers(moneycontrol.moneycontrol_losers())
-            googledoc.write_to_file_indices(moneycontrol.moneycontrol_indices())
-            googledoc.write_to_file_news(moneycontrol.moneycontrol_news())
-            googledoc.write_to_file_investing(investing.investing_pages())
+            print('Running')
 
-            moneycontrol.close_driver()
-            investing.close_driver()
-            sleep(300)
+            if first_run:
+                print('Initializing...')
+                calls = moneycontrol.ActiveCalls()
+                puts = moneycontrol.ActivePuts()
+                gainers = moneycontrol.Gainers()
+                losers = moneycontrol.Losers()
+                indices = moneycontrol.Indices()
+                news = moneycontrol.News()
+                investing_page = investing.InvestingPages()
+                first_run = False
+
+            else:
+                print(f'Starting Scraping, Page Loading - {loading_page}Seconds')
+                sleep(loading_page) # time to load page Required for dynamic websites
+
+                googledoc.write_to_file_calls(calls.moneycontrol_active_calls())
+                googledoc.write_to_file_puts(puts.moneycontrol_active_puts())
+                googledoc.write_to_file_gainers(gainers.moneycontrol_gainers())
+                googledoc.write_to_file_losers(losers.moneycontrol_losers())
+                googledoc.write_to_file_indices(indices.moneycontrol_indices())
+                googledoc.write_to_file_news(news.moneycontrol_news())
+                googledoc.write_to_file_investing(investing_page.investing_pages())
+
+                sleep(time_before_refresh) # time before scraper runs again
+                print('Refreshing')
+
+                calls.refresh()
+                puts.refresh()
+                gainers.refresh()
+                losers.refresh()
+                indices.refresh()
+                news.refresh()
+                investing_page.refresh()
+
+
