@@ -3,7 +3,7 @@
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from bs4 import BeautifulSoup
-from time import sleep
+
 
 url_active_calls = 'https://www.investing.com/indices/indices-futures'
 
@@ -21,8 +21,6 @@ except:
 class InvestingPages:
 
     def __init__(self):
-
-        self.table_content = []
         driver.get(url_active_calls)
 
     def refresh(self):
@@ -30,6 +28,7 @@ class InvestingPages:
 
     def investing_pages(self) -> list:
 
+        table_content = []
         html = driver.page_source
         soup = BeautifulSoup(html, 'lxml')
         ##with open('investing.html', 'r', encoding='utf-8') as f:
@@ -50,14 +49,14 @@ class InvestingPages:
                 chg = data[6].text
                 change_percent = data[7].text
                 time_stamp = data[8].text
-                self.table_content.append([title,
+                table_content.append([title,
                                       last,
                                       high,
                                       low,
                                       chg,
                                       change_percent,
                                       time_stamp])
-        return self.table_content
+        return table_content
 
 
 def close_driver():
