@@ -16,26 +16,29 @@ seconds_to_wait = 1.5
 
 def write_to_file_calls(data):
     worksheet.update('A1:O141', data)
+    print('Calls updated')
 
 
 def write_to_file_puts(data):
     worksheet.update('A145:O286', data)
+    print('Puts updated')
 
 def write_to_file_gainers(data):
     worksheet.update('A290:K391', data)
-
+    print('Gainers updated')
 
 def write_to_file_losers(data):
     worksheet.update('A395:L496', data)
-
+    print('Losers updated')
 
 def write_to_file_indices(data):
-    worksheet.update('A500:I536', data)
-
+    worksheet.update('A500:M550', data)
+    print('Indices updated')
 
 def write_to_file_news(data):
-    worksheet.update('A540:B556', data)
-
+    worksheet.update('A555:B565', data)
+    print('News updated')
 
 def write_to_file_investing(data):
-    worksheet.update('A560:G610', data)
+    worksheet.update('A570:G620', data)
+    print('Investing updated')

@@ -9,7 +9,7 @@ MARKET = datetime.time(9, 15)
 MARKET_CLOSE = datetime.time(15, 35)
 
 first_run = True
-loading_page = 30 # Time to allow page to load, This is a requirement
+loading_page = 40 # Time to allow page to load, This is a requirement
 time_before_refresh = 270  # How often you want the scraper to run
 
 while 1:

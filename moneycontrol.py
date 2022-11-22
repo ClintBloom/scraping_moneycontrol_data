@@ -1,8 +1,11 @@
 ## double hash mark is for debugging
 
+from selenium.webdriver.support.expected_conditions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from selenium import webdriver
 from bs4 import BeautifulSoup
+from time import sleep
 
 
 url_active_calls = 'https://www.moneycontrol.com/stocks/fno/marketstats/options' \
@@ -236,6 +239,7 @@ class Indices:
 
     def __init__(self):
         self.driver = webdriver.Chrome(options=options)
+        self.driver.set_window_size(1920, 1080)
         self.driver.get(url_indices)
 
     def refresh(self):
@@ -243,22 +247,38 @@ class Indices:
 
     def moneycontrol_indices(self) -> list:
 
+        # try:
+        #     # Notification Bar exit
+        #     print('Notification found and closed')
+        #     self.driver.find_element(By.XPATH, '//*[@id="wzrk-cancel"]').click()
+        #
+        # except NoSuchElementException:
+        #     print('Notification not found moving on')
+        #
+        # sleep(1)
+        self.refresh()
+        sleep(5)
+        try:
+            self.driver.find_element(By.XPATH, '/html/body/header/div[2]/div[1]/div/span').click()
+
+        except:
+            pass
+
+        self.driver.find_element(By.XPATH, '/html/body/section/div/div/ul/li[2]/a/span').click()
+        sleep(10)
         table_content = []
         html = self.driver.page_source
         soup = BeautifulSoup(html, 'lxml')
         ##with open('indices.html', 'r', encoding='utf-8') as f:
             ##soup = BeautifulSoup(f, 'lxml')
 
-        main_table = soup.find(['table'], {'id': 'indicesTable'})
-        table = main_table.tbody
-        for tab in table:
-            data_text = tab.text.split()
-            if data_text:
-                data_text.pop()
-                if len(data_text) > 8:
-                    data_text[0] = f'{data_text[0]} {data_text[1]}'
-                    data_text.pop(1)
-                    table_content.append(data_text)
+        main_table = soup.find(['div'], id='indicesTableDataML')
+        table = main_table.find('table')
+        table_row = table.find_all('tr')[1:]
+
+        for tab in table_row:
+            if tab.text.split():
+                table_content.append(tab.text.split())
 
         return table_content
 

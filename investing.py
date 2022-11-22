@@ -9,13 +9,7 @@ url_active_calls = 'https://www.investing.com/indices/indices-futures'
 
 options = Options()
 options.headless = True
-
-try:
-    print('Found driver for investing.py')
-    driver = webdriver.Chrome(options=options)
-
-except:
-    print('Could not find driver for investing.py')
+driver = webdriver.Chrome(options=options)
 
 
 class InvestingPages:
